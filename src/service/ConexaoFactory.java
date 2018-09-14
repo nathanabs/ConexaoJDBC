@@ -5,9 +5,11 @@
  */
 package service;
 
+import application.Program;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,17 +18,39 @@ import java.util.logging.Logger;
  * @author Nathan
  */
 public class ConexaoFactory {
-    public Connection getConexao(){
+
+    public static Connection getConexao() {
         String url = "jdbc:mysql://localhost:3306/agencia";
         String usuario = "root";
         String senha = "admin";
-        
+
         try {
-            Connection con = DriverManager.getConnection(url, usuario, senha);
-            return con;
+            return DriverManager.getConnection(url, usuario, senha);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ConexaoFactory.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return null;
+    }
+
+    public static void fecharConexao(Connection con) {
+        try {
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void fecharConexao(Connection con, Statement st) {
+        fecharConexao(con);
+        try {
+            if (st != null) {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }
