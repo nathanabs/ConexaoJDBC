@@ -8,6 +8,7 @@ package service;
 import application.Program;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -48,6 +49,16 @@ public class ConexaoFactory {
         try {
             if (st != null) {
                 st.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public static void fecharConexao(Connection con, Statement st, ResultSet rs) {
+        fecharConexao(con, st);
+        try {
+            if (rs != null) {
+                rs.close();
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

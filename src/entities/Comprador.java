@@ -11,13 +11,30 @@ package entities;
  */
 public class Comprador {
 
+    private Integer id;
     private String cpf;
     private String nome;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    
 
     public Comprador() {
     }
 
     public Comprador(String cpf, String nome) {
+        this.cpf = cpf;
+        this.nome = nome;
+    }
+
+    public Comprador(int id, String cpf, String nome) {
+        this.id = id;
         this.cpf = cpf;
         this.nome = nome;
     }
@@ -37,9 +54,5 @@ public class Comprador {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
-    
-    
-    
-    
+
 }
