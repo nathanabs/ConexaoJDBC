@@ -8,6 +8,7 @@ package service;
 import entities.Comprador;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -23,11 +24,10 @@ public class CompradorDB {
 
     public void save(Comprador c) {
         String sql = "insert into agencia.comprador (cpf, nome) values('" + c.getCpf() + "','" + c.getNome() + "')";
-        Connection con = ConexaoFactory.getConexao();
-        try {
+        
+        try (Connection con = ConexaoFactory.getConexao()){
             Statement st = con.createStatement();
             st.executeUpdate(sql);
-            ConexaoFactory.fecharConexao(con, st);
             System.out.println("Inserido com sucesso.");
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -39,11 +39,10 @@ public class CompradorDB {
             throw new IllegalArgumentException("Identificação do comprador com erro.");
         }
         String sql = "Delete from comprador where id = " + c.getId();
-        Connection con = ConexaoFactory.getConexao();
-        try {
+        
+        try (Connection con = ConexaoFactory.getConexao()) {
             Statement st = con.createStatement();
             System.out.println(st.executeUpdate(sql));
-            ConexaoFactory.fecharConexao(con, st);
             System.out.println("Excluido com sucesso");
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -55,11 +54,10 @@ public class CompradorDB {
             throw new IllegalArgumentException("Identificação do comprador com erro.");
         }
         String sql = "update agencia.comprador set nome = '" + c.getNome() + "', cpf = '" + c.getCpf() + "' where (id = " + c.getId() + ")";
-        Connection con = ConexaoFactory.getConexao();
-        try {
+        
+        try (Connection con = ConexaoFactory.getConexao()){
             Statement st = con.createStatement();
             System.out.println(st.executeUpdate(sql));
-            ConexaoFactory.fecharConexao(con, st);
             System.out.println("atualizado com sucesso");
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -69,15 +67,14 @@ public class CompradorDB {
     public List<Comprador> pesquisar() {
 
         String sql = "Select id, nome, cpf from comprador";
-        Connection con = ConexaoFactory.getConexao();
-        try {
+        
+        try (Connection con = ConexaoFactory.getConexao()){
             List<Comprador> lista = new ArrayList<>();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 lista.add(new Comprador(rs.getInt("id"), rs.getString("cpf"), rs.getString("nome")));
             }
-            ConexaoFactory.fecharConexao(con, st, rs);
             return lista;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -88,19 +85,41 @@ public class CompradorDB {
     public List<Comprador> pesquisar(String pesquisa) {
 
         String sql = "Select id, nome, cpf from comprador where nome like '%"+pesquisa+"%'";
-        Connection con = ConexaoFactory.getConexao();
-        try {
+        
+        try (Connection con = ConexaoFactory.getConexao()) {
             List<Comprador> lista = new ArrayList<>();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 lista.add(new Comprador(rs.getInt("id"), rs.getString("cpf"), rs.getString("nome")));
             }
-            ConexaoFactory.fecharConexao(con, st, rs);
             return lista;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return null;
+    }
+    public void metaDados(){
+        String sql = "Select * from comprador";
+        
+        try (Connection con = ConexaoFactory.getConexao()) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            ResultSetMetaData rsMetaDados = rs.getMetaData();
+            rs.next();
+            
+            int qtdColunas = rsMetaDados.getColumnCount();
+            System.out.println("Nome tabela: " + rsMetaDados.getTableName(1));
+            for (int i = 1; i <= qtdColunas; i++) {
+                
+                System.out.println("Nome Coluna: " + rsMetaDados.getColumnName(i));
+                System.out.println("Tamanho coluna: " + rsMetaDados.getColumnDisplaySize(i));
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(CompradorDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 }

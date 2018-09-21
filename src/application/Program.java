@@ -24,14 +24,16 @@ public class Program {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //inserir();
+        inserir();
         //atualizar();
         //deletar();
-        pesquisar();
+        //pesquisar();
+        //CompradorDB c = new CompradorDB();
+        //c.metaDados();
     }
 
     public static void inserir() {
-        Comprador comprador = new Comprador("245", "elisa");
+        Comprador comprador = new Comprador("2581", "Maria");
         CompradorDB c = new CompradorDB();
         c.save(comprador);
     }

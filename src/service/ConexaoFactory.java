@@ -33,35 +33,4 @@ public class ConexaoFactory {
         }
         return null;
     }
-
-    public static void fecharConexao(Connection con) {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public static void fecharConexao(Connection con, Statement st) {
-        fecharConexao(con);
-        try {
-            if (st != null) {
-                st.close();
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-    public static void fecharConexao(Connection con, Statement st, ResultSet rs) {
-        fecharConexao(con, st);
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
 }
